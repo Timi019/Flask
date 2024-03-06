@@ -1,6 +1,6 @@
 from flask import Flask
 import random
-
+import requests
 facts_list = ["Większość osób cierpiących na uzależnienie technologiczne doświadcza silnego stresu, gdy znajdują się poza zasięgiem sieci lub nie mogą korzystać ze swoich urządzeń.",
               "Według badania przeprowadzonego w 2018 roku ponad 50% osób w wieku od 18 do 34 lat uważa się za zależne od swoich smartfonów.",
               "Badanie zależności technologicznych jest jednym z najważniejszych obszarów współczesnych badań naukowych.",
@@ -15,7 +15,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def hello_world():
-    return '<h1>Cześć! Na tej stronie możesz dowiedzieć się kilku ciekawostek na temat zależności technologicznych!</h1> <a href="/random_fact">Zobacz losowy fakt!</a> <br> <a href="/password_generator">Wygeneruj hasło o długości 10 znaków!</a> <br> <a href="/coinflip">Rzuć monetą!</a>'
+    return '<h1>Cześć! Na tej stronie możesz dowiedzieć się kilku ciekawostek na temat zależności technologicznych, wygenerować hasło, rzucić monetą oraz wygenerować losowy obrazek kaczki</h1> <a href="/random_fact">Zobacz losowy fakt!</a> <br> <a href="/password_generator">Wygeneruj hasło o długości 10 znaków!</a> <br> <a href="/coinflip">Rzuć monetą!</a> <br> <a href="/duckimage">Wygeneruj kaczkę!</a>'
 @app.route("/random_fact")
 def random_fact():
     return f'<p>{random.choice(facts_list)}</p>'
@@ -35,4 +35,10 @@ def flip_coin():
         return "HEADS"
     else:
         return "TAILS"
+@app.route("/duckimage")
+def get_duck_image_url():    
+    url = 'https://random-d.uk/api/random'
+    res = requests.get(url)
+    data = res.json()
+    return f"<img src={data['url']}>"
 app.run(debug=True)
